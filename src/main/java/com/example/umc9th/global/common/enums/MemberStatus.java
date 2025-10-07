@@ -1,4 +1,4 @@
-package com.example.umc9th.domain.enums;
+package com.example.umc9th.global.common.enums;
 
 public enum MemberStatus {
     ACTIVE, INACTIVE

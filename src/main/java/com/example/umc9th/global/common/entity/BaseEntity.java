@@ -1,4 +1,4 @@
-package com.example.umc9th.global.entity;
+package com.example.umc9th.global.common.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
