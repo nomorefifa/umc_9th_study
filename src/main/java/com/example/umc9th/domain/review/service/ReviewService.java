@@ -3,6 +3,8 @@ package com.example.umc9th.domain.review.service;
 import com.example.umc9th.domain.review.dto.response.ReviewResponse;
 import com.example.umc9th.domain.review.entity.Review;
 import com.example.umc9th.domain.review.repository.ReviewRepository;
+import com.example.umc9th.global.apiPayload.code.GeneralErrorCode;
+import com.example.umc9th.global.apiPayload.exception.GeneralException;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,12 @@ public class ReviewService {
      * @param scoreRange 별점 범위 (선택: "5", "4", "3", "2", "1")
      * @return 필터링된 리뷰 목록
      */
-    public List<ReviewResponse> getMyReviews(Long memberId, String storeName, String scoreRange) {
+    public List<ReviewResponse.MyReviewList> getMyReviews(Long memberId, String storeName, String scoreRange) {
+        // 에러 검증 추가
+        if (memberId == null || memberId <= 0) {
+            throw new GeneralException(GeneralErrorCode.BAD_REQUEST);
+        }
+
         // BooleanBuilder로 동적 조건 생성
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -50,9 +57,14 @@ public class ReviewService {
         // Repository에서 조회
         List<Review> reviews = reviewRepository.findMyReviewsWithFilters(memberId, builder);
 
+        // 리뷰가 없는 경우 처리
+        if (reviews.isEmpty()) {
+            throw new GeneralException(GeneralErrorCode.REVIEW_NOT_FOUND);
+        }
+
         // Entity -> DTO 변환
         return reviews.stream()
-                .map(ReviewResponse::from)
+                .map(ReviewResponse.MyReviewList::from)
                 .collect(Collectors.toList());
     }
 
