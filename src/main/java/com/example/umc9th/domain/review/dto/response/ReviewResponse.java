@@ -45,4 +45,13 @@ public class ReviewResponse {
                     .build();
         }
     }
+
+    // 기존 ReviewResponse 클래스에 아래 레코드 추가
+    @Builder
+    public record AddReviewDTO(
+            Long reviewId,
+            Long storeId,
+            String storeName,
+            LocalDateTime createdAt
+    ) {}
 }
